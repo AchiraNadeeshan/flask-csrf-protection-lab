@@ -2,7 +2,7 @@
 
 This lab demonstrates how Cross-Site Request Forgery (CSRF) attacks work in web applications and how to defend against them using `Flask-WTF`.
 
-## Directory Structure
+## 📁 Directory Structure
 
 ```
 .
@@ -22,7 +22,7 @@ This lab demonstrates how Cross-Site Request Forgery (CSRF) attacks work in web 
 └── .git/
 ```
 
-## Setup
+## ⚙️ Setup
 
 1. **Clone the repository** and navigate into it.
 
@@ -50,7 +50,7 @@ This lab demonstrates how Cross-Site Request Forgery (CSRF) attacks work in web 
 5. **Visit the app**:
    Open your browser at: [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
-## Testing CSRF Vulnerability
+## ⚠️ Testing CSRF Vulnerability
 
 To simulate CSRF attacks:
 
@@ -76,7 +76,7 @@ To simulate CSRF attacks:
 
 5. Check if the profile email or password was changed without user consent.
 
-## Testing CSRF Protection
+## 🛡️ Testing CSRF Protection
 
 To test the secured version:
 
@@ -95,6 +95,6 @@ To test the secured version:
 
 3. Repeat the same exploit steps. The CSRF attacks should now fail with a CSRF token error or no change to data.
 
-## License
+## 📜 License
 
-This project is done for Application Security Module Course work and only for educational purposes only.
+This project is done for Application Security Module Course work and for educational purposes only.
