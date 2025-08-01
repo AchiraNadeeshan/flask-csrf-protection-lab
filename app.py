@@ -1,8 +1,19 @@
 from flask import Flask, request, render_template, session, redirect, url_for
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Replace with a secure key in production
+
+class ProfileForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    submit = SubmitField('Update Email')
+
+class PasswordForm(FlaskForm):
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    submit = SubmitField('Update Password')
 
 def init_db():
     conn = sqlite3.connect('users.db')
@@ -41,36 +52,36 @@ def login():
 def profile():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if request.method == 'POST':
-        email = request.form.get('email')
+    form = ProfileForm()
+    if form.validate_on_submit():
+        email = form.email.data
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        # Vulnerable to CSRF: No token validation
         cursor.execute('UPDATE users SET email = ? WHERE username = ?', (email, session['username']))
         conn.commit()
         conn.close()
-        return render_template('profile.html', message='Email updated successfully', email=email)
+        return render_template('profile.html', message='Email updated successfully', email=email, form=form)
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
     cursor.execute('SELECT email FROM users WHERE username = ?', (session['username'],))
     email = cursor.fetchone()[0]
     conn.close()
-    return render_template('profile.html', email=email)
+    return render_template('profile.html', email=email, form=form)
 
 @app.route('/change-password', methods=['GET', 'POST'])
 def change_password():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if request.method == 'POST':
-        new_password = request.form.get('new_password')
+    form = PasswordForm()
+    if form.validate_on_submit():
+        new_password = form.new_password.data
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        # Vulnerable to CSRF: No token validation
         cursor.execute('UPDATE users SET password = ? WHERE username = ?', (new_password, session['username']))
         conn.commit()
         conn.close()
-        return render_template('change_password.html', message='Password updated successfully')
-    return render_template('change_password.html')
+        return render_template('change_password.html', message='Password updated successfully', form=form)
+    return render_template('change_password.html', form=form)
 
 @app.route('/logout')
 def logout():
